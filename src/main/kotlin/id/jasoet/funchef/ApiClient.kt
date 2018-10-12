@@ -8,6 +8,7 @@ import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.headers
+import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.url
 import io.ktor.client.utils.EmptyContent
 import java.io.FileReader
