@@ -58,7 +58,7 @@ dependencies {
 
     compile "io.ktor:ktor-client-json:$ktorVersion"
     compile "io.ktor:ktor-client-apache:$ktorVersion"
-    compile "io.ktor:ktor-client-core-jvm:$ktorVersion"
+//    compile "io.ktor:ktor-client-core-jvm:$ktorVersion"
     compile "io.ktor:ktor-client-gson:$ktorVersion"
     compile "io.arrow-kt:arrow-core:$arrowVersion"
 
