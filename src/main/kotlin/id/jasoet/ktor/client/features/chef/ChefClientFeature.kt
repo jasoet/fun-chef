@@ -16,8 +16,6 @@
 
 package id.jasoet.ktor.client.features.chef
 
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
 import io.ktor.client.HttpClient
 import io.ktor.client.features.HttpClientFeature
 import io.ktor.client.request.HttpRequestBuilder
@@ -34,26 +32,6 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import java.io.Reader
 import java.security.KeyPair
 import java.security.Security
-
-typealias ChefResult = JsonElement
-
-private val gson = GsonBuilder().setPrettyPrinting().create()
-
-operator fun ChefResult?.get(path: String): ChefResult? {
-    val paths = path.split(".")
-
-    return paths.fold(this) { item, key ->
-        if (item?.isJsonObject == true) {
-            item.asJsonObject[key]
-        } else {
-            null
-        }
-    }
-}
-
-fun ChefResult?.formatted(): String {
-    return gson.toJson(this)
-}
 
 class ChefConfig {
     lateinit var userId: String

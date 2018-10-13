@@ -16,6 +16,8 @@
 
 package id.jasoet.ktor.client.features.chef
 
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
 import org.bouncycastle.util.encoders.Base64
 import java.security.KeyPair
 import java.security.MessageDigest
@@ -69,4 +71,24 @@ internal fun String.rsaSign(keyPair: KeyPair): String {
     val signature = instance.sign()
 
     return signature.base64Encode()
+}
+
+typealias ChefResult = JsonElement
+
+private val gson = GsonBuilder().setPrettyPrinting().create()
+
+operator fun ChefResult?.get(path: String): ChefResult? {
+    val paths = path.split(".")
+
+    return paths.fold(this) { item, key ->
+        if (item?.isJsonObject == true) {
+            item.asJsonObject[key]
+        } else {
+            null
+        }
+    }
+}
+
+fun ChefResult?.formatted(): String {
+    return gson.toJson(this)
 }
