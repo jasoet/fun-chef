@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.yourcompany.boilerplate
+package id.jasoet.ktor.client.features.chef
 
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.gherkin.Feature
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 object ApplicationSpec : Spek({
@@ -49,9 +48,6 @@ object ApplicationSpec : Spek({
             }
 
             Then("should throw when first is invoked") {
-                assertFailsWith(NoSuchElementException::class) {
-                    set.first()
-                }
             }
         }
 

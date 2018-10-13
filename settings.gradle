@@ -8,5 +8,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'fun-chef'
+rootProject.name = 'ktor-client-chef'
 

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C)2018 - Deny Prasetyo <jasoet87@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package id.jasoet.ktor.client.features.chef
 
 import com.google.gson.GsonBuilder
@@ -39,36 +55,39 @@ fun ChefResult?.formatted(): String {
     return gson.toJson(this)
 }
 
+class ChefConfig {
+    lateinit var userId: String
+    lateinit var userPemReader: Reader
+    lateinit var serverHost: String
+    var chefVersion: String? = null
+    var organization: String? = null
+
+    internal fun build(): ChefClientFeature {
+        Security.addProvider(BouncyCastleProvider())
+
+        val pemKeyPair = PEMParser(userPemReader).readObject() as PEMKeyPair
+        val converter = JcaPEMKeyConverter().setProvider("BC")
+        val keyPair = converter.getKeyPair(pemKeyPair)
+        val organizationPath = organization?.let { "/organizations/${it.replace("/", "")}" } ?: ""
+
+        val defaultVersion = "12.22.5"
+        return ChefClientFeature(userId, keyPair, serverHost, organizationPath, chefVersion ?: defaultVersion)
+    }
+}
+
 class ChefClientFeature(
     private val userId: String,
     private val keyPair: KeyPair,
     private val serverHost: String,
-    private val organizationPath: String
+    private val organizationPath: String,
+    private val chefVersion: String
 ) {
 
-    class Config {
-        lateinit var userId: String
-        lateinit var userPemReader: Reader
-        lateinit var serverHost: String
-        var organization: String? = null
-
-        internal fun build(): ChefClientFeature {
-            Security.addProvider(BouncyCastleProvider())
-
-            val pemKeyPair = PEMParser(userPemReader).readObject() as PEMKeyPair
-            val converter = JcaPEMKeyConverter().setProvider("BC")
-            val keyPair = converter.getKeyPair(pemKeyPair)
-            val organizationPath = organization?.let { "/organizations/${it.replace("/", "")}" } ?: ""
-
-            return ChefClientFeature(userId, keyPair, serverHost, organizationPath)
-        }
-    }
-
-    companion object Feature : HttpClientFeature<Config, ChefClientFeature> {
+    companion object Feature : HttpClientFeature<ChefConfig, ChefClientFeature> {
         override val key: AttributeKey<ChefClientFeature> = AttributeKey("ChefClient")
 
-        override fun prepare(block: Config.() -> Unit): ChefClientFeature {
-            return Config().apply(block).build()
+        override fun prepare(block: ChefConfig.() -> Unit): ChefClientFeature {
+            return ChefConfig().apply(block).build()
         }
 
         override fun install(feature: ChefClientFeature, scope: HttpClient) {
@@ -94,7 +113,7 @@ class ChefClientFeature(
         val hashedPath = path.sha1AndBase64Encode()
         val hashedBody = requestBody.sha1AndBase64Encode()
 
-        val requestTime = now()
+        val requestTime = nowFormatted()
 
         val authBuilder = StringBuilder()
             .append("Method:").append(httpMethod.value).append("\n")
@@ -109,7 +128,7 @@ class ChefClientFeature(
         context.headers {
             append("X-Ops-Timestamp", requestTime)
             append("X-Ops-Userid", userId)
-            append("X-Chef-Version", "12.22.5")
+            append("X-Chef-Version", chefVersion)
             append("Accept", "application/json")
             append("X-Ops-Content-Hash", hashedBody)
             append("X-Ops-Sign", "version=1.0")
