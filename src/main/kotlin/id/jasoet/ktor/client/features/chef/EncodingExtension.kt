@@ -1,30 +1,33 @@
-package id.jasoet.funchef
+package id.jasoet.ktor.client.features.chef
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.bouncycastle.openssl.PEMKeyPair
-import org.bouncycastle.openssl.PEMParser
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import org.bouncycastle.util.encoders.Base64
-import java.io.Reader
+import java.security.KeyPair
 import java.security.MessageDigest
-import java.security.Security
 import java.security.Signature
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
-fun String.sha1Digest(): ByteArray {
+internal fun String.sha1Digest(): ByteArray {
     val messageDigest: MessageDigest = MessageDigest.getInstance("SHA-1")
     return messageDigest.digest(this.toByteArray())
 }
 
-fun ByteArray.base64Encode(): String {
+internal fun ByteArray.base64Encode(): String {
     return String(Base64.encode(this))
 }
 
-fun String.sha1AndBase64Encode(): String {
+internal fun String.sha1AndBase64Encode(): String {
     return this.sha1Digest().base64Encode()
 }
 
-fun String.split60(): Array<String?> {
+internal fun now(): String {
+    return LocalDateTime.now(ZoneId.of("UTC"))
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"))
+}
+
+internal fun String.split60(): Array<String?> {
     val count = this.length / 60
     val out = arrayOfNulls<String>(count + 1)
 
@@ -41,13 +44,7 @@ fun String.split60(): Array<String?> {
     return out
 }
 
-fun String.rsaSign(pemReader: Reader): String {
-    Security.addProvider(BouncyCastleProvider())
-
-    val pemKeyPair = PEMParser(pemReader).readObject() as PEMKeyPair
-    val converter = JcaPEMKeyConverter().setProvider("BC")
-    val keyPair = converter.getKeyPair(pemKeyPair)
-
+internal fun String.rsaSign(keyPair: KeyPair): String {
     val privateKey = keyPair.private
 
     val instance = Signature.getInstance("RSA")
