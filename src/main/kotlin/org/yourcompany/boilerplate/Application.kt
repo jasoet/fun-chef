@@ -29,7 +29,11 @@ object Application {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking<Unit> {
-        val result = chefApiClient.get<String>("/nodes")
-        println(result)
+        val nodes = chefApiClient.get<Map<String, Any>>("/nodes/i-gopay-gitlab-runner-01")
+        println(nodes["name"])
+        println(nodes["chef_environment"])
+
+        val roles = chefApiClient.get<Map<String, Any>>("/roles")
+        println(roles)
     }
 }

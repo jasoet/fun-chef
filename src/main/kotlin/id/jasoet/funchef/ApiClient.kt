@@ -1,11 +1,9 @@
 package id.jasoet.funchef
 
-import id.jasoet.funchef.extension.rsaSign
-import id.jasoet.funchef.extension.sha1AndBase64Encode
-import id.jasoet.funchef.extension.split60
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.apache.Apache
 import io.ktor.client.features.defaultRequest
+import io.ktor.client.features.json.GsonSerializer
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.headers
 import io.ktor.client.features.json.JsonFeature
@@ -29,6 +27,7 @@ fun buildRequest(
 ): HttpRequestBuilder.() -> Unit {
     val chefServerHost = "https://chef-server.gopay-internal.vpc"
     val organizationPath = "/organizations/gopay"
+
     return {
         val httpMethod = method
         val path = "$organizationPath/${url.encodedPath}"
@@ -75,6 +74,9 @@ val chefApiClient by lazy {
     val userId = "jasoet"
     val pemReader = FileReader("/Users/jasoet/Documents/in/infrastructure/.chef/jasoet.pem")
     HttpClient(Apache) {
+        install(JsonFeature){
+            serializer = GsonSerializer()
+        }
         defaultRequest(buildRequest(userId, pemReader))
     }
 }

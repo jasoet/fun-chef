@@ -1,17 +1,14 @@
-package id.jasoet.funchef.extension
+package id.jasoet.funchef
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.openssl.PEMKeyPair
 import org.bouncycastle.openssl.PEMParser
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import org.bouncycastle.util.encoders.Base64
 import java.io.Reader
-import java.security.KeyPair
 import java.security.MessageDigest
 import java.security.Security
 import java.security.Signature
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
-
-
 
 
 fun String.sha1Digest(): ByteArray {
