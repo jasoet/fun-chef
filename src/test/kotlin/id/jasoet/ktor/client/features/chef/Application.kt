@@ -16,14 +16,9 @@
 
 package id.jasoet.ktor.client.features.chef
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.GsonSerializer
-import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.get
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
-import java.io.FileReader
 
 /**
  * Documentation of your class
@@ -31,24 +26,15 @@ import java.io.FileReader
 object Application {
     private val log = LoggerFactory.getLogger(Application::class.java)
 
-    private val chefApiClient by lazy {
-        HttpClient(Apache) {
-            install(JsonFeature) {
-                serializer = GsonSerializer()
-            }
-
-            install(ChefClientFeature) {
-                userId = "jasoet"
-                userPemReader = FileReader("/Users/jasoet/Documents/in/infrastructure/.chef/jasoet.pem")
-                serverHost = "https://chef-server.gopay-internal.vpc"
-                organization = "gopay"
-            }
-        }
-    }
-
     @JvmStatic
     fun main(args: Array<String>) = runBlocking<Unit> {
-        val roles = chefApiClient.get<ChefResult>("/nodes/i-gopay-gitlab-runner-01")
+
+        System.setProperty("USER_ID", "jasoet")
+        System.setProperty("USER_PEM_LOCATION", "/Users/jasoet/Documents/in/infrastructure/.chef/jasoet.pem")
+        System.setProperty("CHEF_SERVER_HOST", "https://chef-server.gopay-internal.vpc")
+        System.setProperty("CHEF_ORGANIZATION", "gopay")
+
+        val roles = ChefApiClient().get<ChefResult>("/nodes/i-gopay-gitlab-runner-01")
         println(roles["automatic.filesystem"].formatted())
         println(roles["automatic.filesystem"])
     }
