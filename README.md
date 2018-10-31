@@ -1,5 +1,9 @@
 # Ktor Client Chef 
 
+[![Build Status](https://travis-ci.org/jasoet/ktor-client-chef.svg?branch=master)](https://travis-ci.org/jasoet/ktor-client-chef)
+[![JCenter](https://api.bintray.com/packages/jasoet/ktor/ktor-client-chef/images/download.svg)](https://bintray.com/jasoet/ktor/ktor-client-chef/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/id.jasoet/ktor-client-chef.svg)](http://search.maven.org/#artifactdetails%7Cid.jasoet%7Cfktor-client-chef%7C1.0.0%7Cjar)
+
 [Ktor Client] [Feature] to enable authentication mechanism to [Chef Server API].
 
 Accessing Chef Server API [require](https://docs.chef.io/api_chef_server.html#requirements) detailed and complicated auth mechanism. 
