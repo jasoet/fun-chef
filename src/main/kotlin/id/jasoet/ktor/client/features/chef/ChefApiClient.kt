@@ -47,7 +47,14 @@ object ChefApiClient {
                 userId = config.getString("USER_ID")
                 userPemReader = FileReader(config.getString("USER_PEM_LOCATION"))
                 serverHost = config.getString("CHEF_SERVER_HOST")
-                organization = config.getString("CHEF_ORGANIZATION")
+
+                if (config.hasPath("CHEF_ORGANIZATION")) {
+                    organization = config.getString("CHEF_ORGANIZATION")
+                }
+
+                if (config.hasPath("CHEF_VERSION")) {
+                    chefVersion = config.getString("CHEF_VERSION")
+                }
             }
         }
     }
