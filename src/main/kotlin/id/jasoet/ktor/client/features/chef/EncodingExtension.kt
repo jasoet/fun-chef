@@ -44,17 +44,18 @@ internal fun nowFormatted(): String {
         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"))
 }
 
+private const val SIXTY = 60
 internal fun String.split60(): Array<String?> {
-    val count = this.length / 60
+    val count = this.length / SIXTY
     val out = arrayOfNulls<String>(count + 1)
 
     for (i in 0 until count) {
-        val tmp = this.substring(i * 60, i * 60 + 60)
+        val tmp = this.substring(i * SIXTY, i * SIXTY + SIXTY)
         out[i] = tmp
     }
 
-    if (this.length > count * 60) {
-        val tmp = this.substring(count * 60, this.length)
+    if (this.length > count * SIXTY) {
+        val tmp = this.substring(count * SIXTY, this.length)
         out[count] = tmp
     }
 
