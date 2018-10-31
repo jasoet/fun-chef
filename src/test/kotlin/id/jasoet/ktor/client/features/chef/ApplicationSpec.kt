@@ -17,54 +17,13 @@
 package id.jasoet.ktor.client.features.chef
 
 import org.spekframework.spek2.Spek
-import org.spekframework.spek2.style.gherkin.Feature
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import org.spekframework.spek2.style.specification.describe
 
 object ApplicationSpec : Spek({
-    Feature("Set") {
-        val set by memoized { mutableSetOf<String>() }
-
-        Scenario("adding items") {
-            When("adding foo") {
-                set.add("foo")
-            }
-
-            Then("it should have a size of 1") {
-                assertEquals(1, set.size)
-            }
-
-            Then("it should contain foo") {
-                assertTrue(set.contains("foo"))
-            }
-        }
-
-        Scenario("empty") {
-            Given("an empty set") {
-                // assume(set.isEmpty())
-            }
-            Then("should have a size of 0") {
-                assertEquals(0, set.size)
-            }
-
-            Then("should throw when first is invoked") {
-            }
-        }
-
-        Scenario("getting first item") {
-            val item = "foo"
-            Given("a non-empty set") {
-                set.add(item)
-            }
-
-            lateinit var result: String
-
-            When("getting the first item") {
-                result = set.first()
-            }
-
-            Then("it should return the first item") {
-                assertEquals(item, result)
+    describe("A Chef Api Client") {
+        context("when connecting to chef server") {
+            it("Should return correct Result") {
+              //TODO: Proper Test
             }
         }
     }
