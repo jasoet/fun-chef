@@ -9,9 +9,35 @@
 Accessing Chef Server API [require](https://docs.chef.io/api_chef_server.html#requirements) detailed and complicated auth mechanism. 
 This Kotlin library wrap Chef Server API authentication as Ktor Client Feature.
 
-## Requirement
-- Chef server user account with private key in `pem` format. 
-- Java 8 or later 
+## Gradle
+### Add Maven Central or JCenter repository
+```groovy
+repositories {
+    jcenter()
+}
+```
+
+```groovy
+repositories {
+    mavenCentral()
+}
+```
+
+### Add dependency 
+```groovy
+compile 'id.jasoet:ktor-client-chef:<version>'
+```
+
+## Maven
+### Add dependency
+```xml
+<dependency>
+  <groupId>id.jasoet</groupId>
+  <artifactId>ktor-client-chef</artifactId>
+  <version>VERSION</version>
+  <type>pom</type>
+</dependency>
+```
 
 ## Usage
 ### Simple Usage
@@ -24,6 +50,7 @@ Requires some parameter, parameter can be supplied from `System Properties`, fil
 | USER_PEM_LOCATION | Chef user private key location | string | - | yes |
 | CHEF_SERVER_HOST | Chef server host | string | - | yes |
 | CHEF_ORGANIZATION | Chef organization | string | - | no |
+| CHEF_VERSION | Chef server version | string | 12.22.5 | no |
 
 If you set `CHEF_ORGANIZATION` url for request will prefixed by `/organizations/<NAME>/` so you don't need to include that on your request. 
 
@@ -34,8 +61,7 @@ If you set `CHEF_ORGANIZATION` url for request will prefixed by `/organizations/
 System.setProperty("USER_ID", "chef-client")
 System.setProperty("USER_PEM_LOCATION", "/home/chef-client/.chef/client.pem")
 System.setProperty("CHEF_SERVER_HOST", "https://chef-server.jasoet.id")
-// Optional
-System.setProperty("CHEF_ORGANIZATION", "ktor")
+System.setProperty("CHEF_ORGANIZATION", "ktor") // Optional
 
 // HttpClient object will created lazily when invoke `ChefApiClient()`     
 val nodes = ChefApiClient().get<ChefResult>("/nodes/p-postgresql-master-01")
